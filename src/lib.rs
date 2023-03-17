@@ -21,29 +21,28 @@ pub fn stack() {
 
     // Or maybe you think you can cheat and change x by assigning a new value to mut_ref_to_const_x?
     // *mut_ref_to_const_x = 100; // compiler error! can not assign to *mut_const_ref_to_x which is behing a & ref
+}
 
+pub fn stack2() {
     // But what if we create a mut ref?
     let mut z = 12;
     let mut mut_ref_to_mut_z = &mut z;
-    //println!("{mut_ref_to_mut_z}");
-
-    // However, now we can't print the value.  Why not?  the println! macro will immutably borrow the arguments passed
-    // to it.  But, the rules of rust ownership is this:
-    // - You can have one, and only one mutable reference to some data
-    // - Or you can have many immutable references to some data
-    // Note that this is an either or choice.
+    println!("mut_ref_to_mut_z: address = {mut_ref_to_mut_z:p}");
 
     *mut_ref_to_mut_z = 100;
     // We can't println!(mut_ref_to_mut_z) anymore, but we can create a new variable that has the same address.
     // the borrow checker doesn't allow it.
     let a: &i32 = mut_ref_to_mut_z;
-    println!("a: address = {:p}, value = {a}", &a);
+    println!("After assigning a to mut_ref_to_mut_z");
+    println!("  a: address = {:p}, value = {a}", &a);
+    println!("  mut_ref_to_mut_z: address = {:p}", mut_ref_to_mut_z);
 
     // But wait...what if I change where mut_ref_to_z is referencing??
     let mut b = 200;
     mut_ref_to_mut_z = &mut b;
-    println!("After reassignment of z:");
+    println!("After reassignment of z to 200:");
     println!("  a: address = {:p}, value = {a}", &a);
+    println!("  mut_ref_to_mut_z: address = {:p}", mut_ref_to_mut_z);
     println!("  mut_ref_to_mut_z: value = {mut_ref_to_mut_z}");
 }
 
@@ -53,6 +52,6 @@ mod tests {
 
     #[test]
     fn it_works() {
-        stack();
+        stack2();
     }
 }
